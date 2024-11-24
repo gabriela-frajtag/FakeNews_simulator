@@ -101,10 +101,7 @@ def run_simulation():
         # Barra de progresso
         progress_bar = st.progress(0)
 
-        # Criar o espaço para exibir o gráfico animado
-        placeholder = st.empty()
-
-        # Criar o gráfico
+        # Criar o gráfico de Ising
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.set_axis_off()  # Oculta os eixos
 
@@ -121,11 +118,11 @@ def run_simulation():
             model.calculate_credibility()
             ax.clear()  # Limpa o gráfico de Ising
             model.plot_grid(iteration, ax)  # Plota a nova grade
-            placeholder.pyplot(fig)  # Exibe o gráfico de Ising
+            st.pyplot(fig)  # Exibe o gráfico de Ising
 
             # Atualiza o gráfico de credibilidade
             cred_ax.plot(range(iteration + 1), model.credibility_history, color="blue")
-            placeholder.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
+            st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
 
             # Atualiza a barra de progresso
             progress_bar.progress((iteration + 1) / iterations)
