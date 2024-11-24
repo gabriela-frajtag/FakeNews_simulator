@@ -99,10 +99,12 @@ def run_simulation():
         )
 
         # Criar o gráfico da grade inicial com resolução menor
-        fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
-        ax.set_axis_off()  # Oculta os eixos
-        model.plot_grid(0, ax)
-        st.pyplot(fig)
+        col1, col2 = st.columns([1, 1])  # Criar duas colunas de largura igual
+        with col1:
+            fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
+            ax.set_axis_off()  # Oculta os eixos
+            model.plot_grid(0, ax)
+            st.pyplot(fig)
 
         # Barra de carregamento para iteração
         progress_bar = st.progress(0)
@@ -121,11 +123,12 @@ def run_simulation():
         st.subheader(f"Credibilidade da Fake News ({fake_news_name}) ao Longo do Tempo")
         st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
-        # Exibir a grade final (após simulação) com resolução menor
-        fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
-        ax.set_axis_off()
-        model.plot_grid(num_iterations, ax)
-        st.pyplot(fig)
+        with col2:
+            # Exibir a grade final (após simulação) com resolução menor
+            fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
+            ax.set_axis_off()
+            model.plot_grid(num_iterations, ax)
+            st.pyplot(fig)
 
 # Configuração da página e abas
 st.set_page_config(page_title="Simulação de Fake News", layout="wide")
