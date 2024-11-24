@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import time  # Importando a biblioteca time para usar time.sleep()
+import time
+from matplotlib.animation import FuncAnimation
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -69,7 +70,7 @@ class FakeNewsIsingModel:
             ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=10)
         for (i, j) in self.wise_people:
             ax.text(j, i, "💡", ha='center', va='center', color="black", fontsize=10)  # Símbolo de lampada para sábios
-        ax.set_title(f"Iteração: {iteration}")
+        ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}")
         ax.grid(True, color="black", linewidth=0.5)
         ax.axis('off')
 
@@ -83,66 +84,51 @@ def run_simulation():
     num_influencers = st.slider("Número de Influenciadores", min_value=1, max_value=10, value=2)
     num_wise = st.slider("Número de Sábios", min_value=1, max_value=10, value=3)
     temperature = st.slider("Temperatura", min_value=0.1, max_value=5.0, value=2.0)
-    iterations = st.slider("Número de Iterações", min_value=1, max_value=500, value=100)
 
-    # Inicializar o modelo com os parâmetros escolhidos
-    model = FakeNewsIsingModel(
-        grid_size=grid_size,
-        num_influencers=num_influencers,
-        num_wise=num_wise,
-        temperature=temperature,
-        fake_news_name=fake_news_name
-    )
-
-    # Botão para iniciar a animação
+    # Criar o botão de iniciar simulação
     start_button = st.button("Iniciar Simulação")
 
     if start_button:
-        # Barra de progresso
-        progress_bar = st.progress(0)
+        # Inicializar o modelo com os parâmetros escolhidos
+        model = FakeNewsIsingModel(
+            grid_size=grid_size,
+            num_influencers=num_influencers,
+            num_wise=num_wise,
+            temperature=temperature,
+            fake_news_name=fake_news_name
+        )
 
-        # Criar o gráfico de Ising
+        # Criar o gráfico da grade inicial
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.set_axis_off()  # Oculta os eixos
+        model.plot_grid(0, ax)
+        st.pyplot(fig)
 
-        # Gráfico de credibilidade
-        cred_fig, cred_ax = plt.subplots(figsize=(5, 2))
-        cred_ax.set_title("Credibilidade ao Longo do Tempo")
-        cred_ax.set_ylim(0, 1)
-        cred_ax.set_xlabel("Iterações")
-        cred_ax.set_ylabel("Credibilidade")
+        # Barra de carregamento para iteração
+        progress_bar = st.progress(0)
 
-        # Exibir a primeira iteração
-        model.update_state()
-        model.calculate_credibility()
-        ax.clear()  # Limpa o gráfico de Ising
-        model.plot_grid(0, ax)  # Plota a primeira iteração
-        st.pyplot(fig)  # Exibe o gráfico de Ising
-        cred_ax.plot(range(1), model.credibility_history, color="blue")
-        st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
-
-        # Animação
-        for iteration in range(1, iterations):
-            model.update_state()
-            model.calculate_credibility()
-            ax.clear()  # Limpa o gráfico de Ising
+        # Loop de iteração
+        for iteration in range(100):
+            model.update_state()  # Atualiza o estado do modelo
+            model.calculate_credibility()  # Calcula a credibilidade
+            ax.clear()  # Limpa o gráfico
             model.plot_grid(iteration, ax)  # Plota a nova grade
-            st.pyplot(fig)  # Exibe o gráfico de Ising
+            st.pyplot(fig)  # Exibe o gráfico atualizado
+            st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
 
-            # Atualiza o gráfico de credibilidade
-            cred_ax.plot(range(iteration + 1), model.credibility_history, color="blue")
-            st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
+            progress_bar.progress((iteration + 1) / 100)
 
-            # Atualiza a barra de progresso
-            progress_bar.progress((iteration + 1) / iterations)
+            # Intervalo de atualização para dar tempo ao gráfico
+            time.sleep(0.1)
 
-            time.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
-
-        st.success("Simulação concluída!")
+        # Exibir a tela final com o gráfico de credibilidade
+        st.subheader(f"Credibilidade da Fake News ({fake_news_name}) ao Longo do Tempo")
+        st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
 if __name__ == "__main__":
-    # Configuração da interface com Streamlit
-    st.set_page_config(page_title="Simulação de Fake News", layout="wide")
+    run_simulation()
+
+    st.set_page_config(page_title="Simulação de Fake News")
 
     # Aba principal
     tab1, tab2 = st.tabs(["Simulação", "Sobre"])
