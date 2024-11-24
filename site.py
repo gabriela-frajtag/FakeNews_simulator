@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import time  # Importando a biblioteca time para usar time.sleep()
+from matplotlib.animation import FuncAnimation  # Para animação
+import time
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -73,6 +74,13 @@ class FakeNewsIsingModel:
         ax.grid(True, color="black", linewidth=0.5)
         ax.axis('off')
 
+# Função para animar o modelo
+def animate(i, model, ax):
+    model.update_state()
+    model.calculate_credibility()
+    ax.clear()  # Limpa o gráfico
+    model.plot_grid(i, ax)  # Plota a nova grade
+
 # Função principal para a interface do Streamlit
 def run_simulation():
     st.title("Simulador de Propagação de Fake News - Modelo de Ising")
@@ -83,6 +91,7 @@ def run_simulation():
     num_influencers = st.slider("Número de Influenciadores", min_value=1, max_value=10, value=2)
     num_wise = st.slider("Número de Sábios", min_value=1, max_value=10, value=3)
     temperature = st.slider("Temperatura", min_value=0.1, max_value=5.0, value=2.0)
+    iterations = st.slider("Número de Iterações", min_value=1, max_value=500, value=100)
 
     # Inicializar o modelo com os parâmetros escolhidos
     model = FakeNewsIsingModel(
@@ -100,62 +109,42 @@ def run_simulation():
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.set_axis_off()  # Oculta os eixos
 
-    # Loop de iteração
-    for iteration in range(100):
-        model.update_state()  # Atualiza o estado do modelo
-        model.calculate_credibility()  # Calcula a credibilidade
-        ax.clear()  # Limpa o gráfico
-        model.plot_grid(iteration, ax)  # Plota a nova grade
-        st.pyplot(fig)  # Exibe o gráfico atualizado
-        st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
-        time.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
-
-if __name__ == "__main__":
-    run_simulation()
-
-# Configuração da interface com Streamlit
-st.set_page_config(page_title="Simulação de Fake News", layout="wide")
-
-# Aba principal
-tab1, tab2 = st.tabs(["Simulação", "Sobre"])
-
-with tab1:
-    st.header("Simulação de Fake News com o Modelo de Ising")
-
-    # Entrada de parâmetros
-    grid_size = st.slider("Tamanho da grade (NxN):", 10, 50, 20)
-    temperature = st.slider("Temperatura:", 0.1, 5.0, 2.0)
-    num_influencers = st.slider("Quantidade de influenciadores:", 1, 10, 2)
-    num_wise = st.slider("Quantidade de sábios:", 1, 10, 3)
-    fake_news_name = st.text_input("Nome da Fake News:", "Fake News")
-
-    # Inicializar o modelo
-    model = FakeNewsIsingModel(grid_size, 10, num_influencers, num_wise, temperature, fake_news_name)
-
-    # Exibir a animação
-    st.write("### Simulação em andamento:")
-    fig, ax = plt.subplots()
-    anim = FuncAnimation(fig, animate, fargs=(model, ax), frames=200, interval=200)
+    # Animação
+    anim = FuncAnimation(fig, animate, fargs=(model, ax), frames=iterations, interval=100)
     st.pyplot(fig)
 
-with tab2:
-    st.header("Sobre o Modelo")
-    st.markdown("""
-    Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo. 
-    Foi desenvolvido por alunos do quarto semestre da Ilum Escola de Ciência.
-    
-    ### Modificações do modelo:
-    - **Spins (-1, 0, 1)** representam:
-      - `-1`: Pessoas que acreditam na fake news.
-      - `0`: Pessoas neutras.
-      - `1`: Pessoas que não acreditam.
-    - **Influenciadores (★)** têm maior peso na influência de vizinhos.
-    - **Sábios (💡)** nunca acreditam na fake news.
-    
-    ### Parâmetros ajustáveis:
-    - **Temperatura**: Controla a probabilidade de mudanças de estado.
-    - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
+    # Exibir a credibilidade ao longo do tempo
+    st.write("### Credibilidade ao Longo do Tempo")
+    st.line_chart(model.credibility_history)
 
-    Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
-    Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
-    """)
+if __name__ == "__main__":
+    # Configuração da interface com Streamlit
+    st.set_page_config(page_title="Simulação de Fake News", layout="wide")
+
+    # Aba principal
+    tab1, tab2 = st.tabs(["Simulação", "Sobre"])
+
+    with tab1:
+        run_simulation()
+
+    with tab2:
+        st.header("Sobre o Modelo")
+        st.markdown("""
+        Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo. 
+        Foi desenvolvido por alunos do quarto semestre da Ilum Escola de Ciência.
+
+        ### Modificações do modelo:
+        - **Spins (-1, 0, 1)** representam:
+          - `-1`: Pessoas que acreditam na fake news.
+          - `0`: Pessoas neutras.
+          - `1`: Pessoas que não acreditam.
+        - **Influenciadores (★)** têm maior peso na influência de vizinhos.
+        - **Sábios (💡)** nunca acreditam na fake news.
+
+        ### Parâmetros ajustáveis:
+        - **Temperatura**: Controla a probabilidade de mudanças de estado.
+        - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
+
+        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
+        Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
+        """)
