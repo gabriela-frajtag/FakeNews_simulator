@@ -99,7 +99,7 @@ def run_simulation():
         )
 
         # Criar o gráfico da grade inicial com resolução menor
-        fig, ax = plt.subplots(figsize=(6, 6), dpi=60)  # Aumente dpi para ajustar o tamanho
+        fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
         ax.set_axis_off()  # Oculta os eixos
         model.plot_grid(0, ax)
         st.pyplot(fig)
@@ -122,7 +122,7 @@ def run_simulation():
         st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
         # Exibir a grade final (após simulação) com resolução menor
-        fig, ax = plt.subplots(figsize=(6, 6), dpi=60)  # Aumente dpi para ajustar o tamanho
+        fig, ax = plt.subplots(figsize=(4, 4), dpi=40)  # Reduzimos figsize e dpi
         ax.set_axis_off()
         model.plot_grid(num_iterations, ax)
         st.pyplot(fig)
