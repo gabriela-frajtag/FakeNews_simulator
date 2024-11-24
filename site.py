@@ -63,15 +63,15 @@ class FakeNewsIsingModel:
         credibility = np.mean(self.state)
         self.credibility_history.append(credibility)
 
-    def plot_grid(self, iteration, ax):
-        ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1)
-        for (i, j) in self.influencers:
-            ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=10)
-        for (i, j) in self.wise_people:
-            ax.text(j, i, "♦", ha='center', va='center', color="black", fontsize=10)  # Símbolo de lampada para sábios
-        ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}")
-        ax.grid(True, color="black", linewidth=0.5)
-        ax.axis('off')
+def plot_grid(self, iteration, ax):
+    ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1)
+    for (i, j) in self.influencers:
+        ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=8)  # Tamanho menor para a estrela
+    for (i, j) in self.wise_people:
+        ax.text(j, i, "●", ha='center', va='center', color="black", fontsize=8)  # Símbolo de círculo preenchido
+    ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}", fontsize=10)  # Título menor
+    ax.grid(True, color="black", linewidth=0.5)
+    ax.axis('off')
 
 # Função principal para a interface do Streamlit
 def run_simulation():
