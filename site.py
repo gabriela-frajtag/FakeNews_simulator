@@ -83,6 +83,7 @@ def run_simulation():
     num_influencers = st.slider("Número de Influenciadores", min_value=1, max_value=10, value=2)
     num_wise = st.slider("Número de Sábios", min_value=1, max_value=10, value=3)
     temperature = st.slider("Temperatura", min_value=0.1, max_value=5.0, value=2.0)
+    num_iterations = st.slider("Número de Iterações", min_value=1, max_value=1000, value=100, step=1)
 
     # Criar o botão de iniciar simulação
     start_button = st.button("Iniciar Simulação")
@@ -107,11 +108,11 @@ def run_simulation():
         progress_bar = st.progress(0)
 
         # Loop de iteração
-        for iteration in range(100):
+        for iteration in range(num_iterations):
             model.update_state()  # Atualiza o estado do modelo
             model.calculate_credibility()  # Calcula a credibilidade
 
-            progress_bar.progress((iteration + 1) / 100)
+            progress_bar.progress((iteration + 1) / num_iterations)
 
             # Intervalo de atualização para dar tempo ao gráfico
             time.sleep(0.1)
@@ -123,7 +124,7 @@ def run_simulation():
         # Exibir a grade final (após simulação)
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.set_axis_off()
-        model.plot_grid(100, ax)
+        model.plot_grid(num_iterations, ax)
         st.pyplot(fig)
 
 # Configuração da página e abas
