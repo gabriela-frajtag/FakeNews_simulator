@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from matplotlib.animation import FuncAnimation
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -111,10 +110,6 @@ def run_simulation():
         for iteration in range(100):
             model.update_state()  # Atualiza o estado do modelo
             model.calculate_credibility()  # Calcula a credibilidade
-            ax.clear()  # Limpa o gráfico
-            model.plot_grid(iteration, ax)  # Plota a nova grade
-            st.pyplot(fig)  # Exibe o gráfico atualizado
-            st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
 
             progress_bar.progress((iteration + 1) / 100)
 
@@ -125,35 +120,39 @@ def run_simulation():
         st.subheader(f"Credibilidade da Fake News ({fake_news_name}) ao Longo do Tempo")
         st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
-if __name__ == "__main__":
+        # Exibir a grade final (após simulação)
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ax.set_axis_off()
+        model.plot_grid(100, ax)
+        st.pyplot(fig)
+
+# Configuração da página e abas
+st.set_page_config(page_title="Simulação de Fake News", layout="wide")
+
+# Aba principal
+tab1, tab2 = st.tabs(["Simulação", "Sobre"])
+
+with tab1:
     run_simulation()
 
-    st.set_page_config(page_title="Simulação de Fake News")
+with tab2:
+    st.header("Sobre o Modelo")
+    st.markdown("""
+    Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo. 
+    Foi desenvolvido por alunos do quarto semestre da Ilum Escola de Ciência.
 
-    # Aba principal
-    tab1, tab2 = st.tabs(["Simulação", "Sobre"])
+    ### Modificações do modelo:
+    - **Spins (-1, 0, 1)** representam:
+      - `-1`: Pessoas que acreditam na fake news.
+      - `0`: Pessoas neutras.
+      - `1`: Pessoas que não acreditam.
+    - **Influenciadores (★)** têm maior peso na influência de vizinhos.
+    - **Sábios (💡)** nunca acreditam na fake news - são os experts
 
-    with tab1:
-        run_simulation()
+    ### Parâmetros ajustáveis:
+    - **Temperatura**: Controla a probabilidade de mudanças de estado.
+    - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
 
-    with tab2:
-        st.header("Sobre o Modelo")
-        st.markdown("""
-        Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo. 
-        Foi desenvolvido por alunos do quarto semestre da Ilum Escola de Ciência.
-
-        ### Modificações do modelo:
-        - **Spins (-1, 0, 1)** representam:
-          - `-1`: Pessoas que acreditam na fake news.
-          - `0`: Pessoas neutras.
-          - `1`: Pessoas que não acreditam.
-        - **Influenciadores (★)** têm maior peso na influência de vizinhos.
-        - **Sábios (💡)** nunca acreditam na fake news - são os experts
-
-        ### Parâmetros ajustáveis:
-        - **Temperatura**: Controla a probabilidade de mudanças de estado.
-        - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
-
-        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
-        Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
-        """)
+    Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como especialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
+    Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
+    """)
