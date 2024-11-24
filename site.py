@@ -1,8 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation  # Para animação
-import time
+import time  # Importando a biblioteca time para usar time.sleep()
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -73,13 +72,6 @@ class FakeNewsIsingModel:
         ax.set_title(f"Iteração: {iteration}")
         ax.grid(True, color="black", linewidth=0.5)
         ax.axis('off')
-
-# Função para animar o modelo
-def animate(i, model, ax):
-    model.update_state()
-    model.calculate_credibility()
-    ax.clear()  # Limpa o gráfico
-    model.plot_grid(i, ax)  # Plota a nova grade
 
 # Função principal para a interface do Streamlit
 def run_simulation():
