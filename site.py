@@ -100,6 +100,7 @@ def run_simulation():
     if start_button:
         # Barra de progresso
         progress_bar = st.progress(0)
+
         # Criar o espaço para exibir o gráfico animado
         placeholder = st.empty()
 
@@ -107,14 +108,24 @@ def run_simulation():
         fig, ax = plt.subplots(figsize=(5, 5))
         ax.set_axis_off()  # Oculta os eixos
 
+        # Gráfico de credibilidade
+        cred_fig, cred_ax = plt.subplots(figsize=(5, 2))
+        cred_ax.set_title("Credibilidade ao Longo do Tempo")
+        cred_ax.set_ylim(0, 1)
+        cred_ax.set_xlabel("Iterações")
+        cred_ax.set_ylabel("Credibilidade")
+
         # Animação
         for iteration in range(iterations):
             model.update_state()
             model.calculate_credibility()
-            ax.clear()  # Limpa o gráfico
+            ax.clear()  # Limpa o gráfico de Ising
             model.plot_grid(iteration, ax)  # Plota a nova grade
-            st.pyplot(fig)  # Exibe o gráfico
-            st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
+            st.pyplot(fig)  # Exibe o gráfico de Ising
+
+            # Atualiza o gráfico de credibilidade
+            cred_ax.plot(range(iteration + 1), model.credibility_history, color="blue")
+            st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
 
             # Atualiza a barra de progresso
             progress_bar.progress((iteration + 1) / iterations)
