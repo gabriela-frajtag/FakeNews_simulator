@@ -169,7 +169,7 @@ with tab2:
 
     st.markdown("""
     Onde:
-    - \( \Delta E \) é a variação de energia ao mudar o estado de um indivíduo.
+    - $\Delta E$ é a variação de energia ao mudar o estado de um indivíduo.
     - \( T \) é a temperatura do sistema (quanto maior a temperatura, mais fácil é a mudança de estado).
     - O valor de \( \Delta E \) é calculado como a diferença entre a energia do estado atual e do novo estado proposto, levando em consideração a influência dos vizinhos e dos influenciadores.
     """)
