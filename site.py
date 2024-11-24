@@ -178,7 +178,7 @@ with tab2:
     ### Funcionamento do Algoritmo:
     - **Inicialização**: No começo, cada pessoa é atribuída a uma crença aleatória: ela pode acreditar na fake news (`1`), ser neutra (`0`) ou não acreditar nela (`-1`). 
     - **Seleção aleatória**: Durante cada iteração, uma pessoa é escolhida aleatoriamente para tentar mudar de opinião. Se essa pessoa for um sábio (que nunca acredita na fake news), ela não terá sua crença alterada. Caso contrário, ela poderá ser influenciada pelos seus vizinhos e, no caso dos **influenciadores**, por sua maior capacidade de persuasão.
-    - **Probabilidade de mudança de crença**: Para uma pessoa que não seja sábia, a mudança de crença depende de sua interação com os vizinhos, o que é calculado pela variação de energia ($\Delta E$) de sua configuração. Caso essa mudança de energia seja negativa (ou com uma probabilidade calculada via a fórmula ($P(\Delta E$), ela pode mudar de crença.
+    - **Probabilidade de mudança de crença**: Para uma pessoa que não seja sábia, a mudança de crença depende de sua interação com os vizinhos, o que é calculado pela variação de energia ($\Delta E$) de sua configuração. Caso essa mudança de energia seja negativa (ou com uma probabilidade calculada via a fórmula $P(\Delta E$), ela pode mudar de crença.
 
     Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como especialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
     Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
