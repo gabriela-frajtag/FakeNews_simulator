@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -53,26 +52,66 @@ class FakeNewsIsingModel:
         for _ in range(self.steps_per_update):
             i, j = np.random.randint(0, self.grid_size, size=2)
             if (i, j) in self.wise_people:
-                continue
+                continue  # Ignora os sábios
             new_state = np.random.choice([-1, 0, 1])
             delta_e = self.energy_change(i, j, new_state)
             if delta_e < 0 or np.random.random() < np.exp(-delta_e / self.temperature):
                 self.state[i, j] = new_state
 
     def calculate_credibility(self):
-        return np.mean(self.state)
+        credibility = np.mean(self.state)
+        self.credibility_history.append(credibility)
 
-# Função para animar o gráfico
-def animate(i, model, ax):
-    model.update_state()
-    ax.clear()
-    ax.imshow(model.state, cmap='RdYlGn', vmin=-1, vmax=1)
-    for (x, y) in model.influencers:
-        ax.text(y, x, "★", color="black", ha="center", va="center", fontsize=12)
-    for (x, y) in model.wise_people:
-        ax.text(y, x, "💡", color="yellow", ha="center", va="center", fontsize=12)
-    ax.set_title(f"Iteração {i}")
-    ax.axis("off")
+    def plot_grid(self, iteration, ax):
+        ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1)
+        for (i, j) in self.influencers:
+            ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=10)
+        for (i, j) in self.wise_people:
+            ax.text(j, i, "💡", ha='center', va='center', color="black", fontsize=10)  # Símbolo de lampada para sábios
+        ax.set_title(f"Iteração: {iteration}")
+        ax.grid(True, color="black", linewidth=0.5)
+        ax.axis('off')
+
+# Função principal para a interface do Streamlit
+def run_simulation():
+    st.title("Simulador de Propagação de Fake News - Modelo de Ising")
+
+    # Inputs do usuário
+    fake_news_name = st.text_input("Nome da Fake News", "Fake News")
+    grid_size = st.slider("Tamanho da grade", min_value=10, max_value=50, value=20)
+    num_influencers = st.slider("Número de Influenciadores", min_value=1, max_value=10, value=2)
+    num_wise = st.slider("Número de Sábios", min_value=1, max_value=10, value=3)
+    temperature = st.slider("Temperatura", min_value=0.1, max_value=5.0, value=2.0)
+
+    # Inicializar o modelo com os parâmetros escolhidos
+    model = FakeNewsIsingModel(
+        grid_size=grid_size,
+        num_influencers=num_influencers,
+        num_wise=num_wise,
+        temperature=temperature,
+        fake_news_name=fake_news_name
+    )
+
+    # Criar o espaço para exibir o gráfico animado
+    placeholder = st.empty()
+
+    # Criar o gráfico
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.set_axis_off()  # Oculta os eixos
+
+    # Loop de iteração
+    for iteration in range(100):
+        model.update_state()  # Atualiza o estado do modelo
+        model.calculate_credibility()  # Calcula a credibilidade
+        ax.clear()  # Limpa o gráfico
+        model.plot_grid(iteration, ax)  # Plota a nova grade
+        st.pyplot(fig)  # Exibe o gráfico atualizado
+        st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
+        st.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
+
+if __name__ == "__main__":
+    run_simulation()
+
 
 # Configuração da interface com Streamlit
 st.set_page_config(page_title="Simulação de Fake News", layout="wide")
