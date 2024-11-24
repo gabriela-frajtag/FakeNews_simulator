@@ -68,7 +68,7 @@ class FakeNewsIsingModel:
         for (i, j) in self.influencers:
             ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=10)
         for (i, j) in self.wise_people:
-            ax.text(j, i, "💡", ha='center', va='center', color="black", fontsize=6)  # Símbolo de lampada para sábios
+            ax.text(j, i, "♦", ha='center', va='center', color="black", fontsize=10)  # Símbolo de lampada para sábios
         ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}")
         ax.grid(True, color="black", linewidth=0.5)
         ax.axis('off')
@@ -99,7 +99,7 @@ def run_simulation():
         )
 
         # Criar o gráfico da grade inicial
-        fig, ax = plt.subplots(figsize=(3, 3))
+        fig, ax = plt.subplots(figsize=(2, 2))
         ax.set_axis_off()  # Oculta os eixos
         model.plot_grid(0, ax)
         st.pyplot(fig)
@@ -122,7 +122,7 @@ def run_simulation():
         st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
         # Exibir a grade final (após simulação)
-        fig, ax = plt.subplots(figsize=(3, 3))
+        fig, ax = plt.subplots(figsize=(2, 2))
         ax.set_axis_off()
         model.plot_grid(num_iterations, ax)
         st.pyplot(fig)
@@ -148,7 +148,7 @@ with tab2:
       - `0`: Pessoas neutras.
       - `1`: Pessoas que não acreditam.
     - **Influenciadores (★)** têm maior peso na influência de vizinhos.
-    - **Sábios (💡)** nunca acreditam na fake news - são os experts
+    - **Sábios (♦)** nunca acreditam na fake news - são os experts
 
     ### Parâmetros ajustáveis:
     - **Temperatura**: Controla a probabilidade de mudanças de estado.
