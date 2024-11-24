@@ -162,7 +162,7 @@ if __name__ == "__main__":
           - `0`: Pessoas neutras.
           - `1`: Pessoas que não acreditam.
         - **Influenciadores (★)** têm maior peso na influência de vizinhos.
-        - **Sábios (💡)** nunca acreditam na fake news - são os experts.
+        - **Sábios (💡)** nunca acreditam na fake news - são os experts
 
         ### Parâmetros ajustáveis:
         - **Temperatura**: Controla a probabilidade de mudanças de estado.
