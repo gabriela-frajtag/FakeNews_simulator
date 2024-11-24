@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import time  # Importando a biblioteca time para usar time.sleep()
 
 # Modelo de Ising modificado para fake news
 class FakeNewsIsingModel:
@@ -107,11 +108,10 @@ def run_simulation():
         model.plot_grid(iteration, ax)  # Plota a nova grade
         st.pyplot(fig)  # Exibe o gráfico atualizado
         st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
-        st.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
+        time.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
 
 if __name__ == "__main__":
     run_simulation()
-
 
 # Configuração da interface com Streamlit
 st.set_page_config(page_title="Simulação de Fake News", layout="wide")
