@@ -41,16 +41,6 @@ class FakeNewsIsingModel:
                     neighbors.append((x % self.grid_size, y % self.grid_size))
         return neighbors
 
-    def update_state(self):
-        for _ in range(self.steps_per_update):
-            i, j = np.random.randint(0, self.grid_size, size=2)
-            if (i, j) in self.wise_people:
-                continue  # Ignora os sábios, pois eles não acreditam na fake news
-            new_state = np.random.choice([-1, 0, 1])
-            delta_e = self.energy_change(i, j, new_state)
-            if delta_e < 0 or np.random.random() < np.exp(-delta_e / self.temperature):
-                self.state[i, j] = new_state
-
     def energy_change(self, i, j, new_state):
         radius = 2 if (i, j) in self.influencers else 1
         neighbors = self.get_neighbors(i, j, radius)
@@ -59,51 +49,74 @@ class FakeNewsIsingModel:
         new_energy = -interaction_weight * sum(new_state * self.state[x, y] for x, y in neighbors)
         return new_energy - old_energy
 
-    def plot_grid(self, ax):
-        ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1)
-        for (i, j) in self.influencers:
-            ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=10)
-        for (i, j) in self.wise_people:
-            ax.text(j, i, "💡", ha='center', va='center', color="black", fontsize=10)
-        ax.set_title(f"Fake News: {self.fake_news_name}")
-        ax.grid(False)
-        ax.axis('off')
+    def update_state(self):
+        for _ in range(self.steps_per_update):
+            i, j = np.random.randint(0, self.grid_size, size=2)
+            if (i, j) in self.wise_people:
+                continue
+            new_state = np.random.choice([-1, 0, 1])
+            delta_e = self.energy_change(i, j, new_state)
+            if delta_e < 0 or np.random.random() < np.exp(-delta_e / self.temperature):
+                self.state[i, j] = new_state
 
-# Função para exibir a animação no Streamlit
-def run_simulation():
-    # Definir variáveis de controle
-    grid_size = st.sidebar.slider("Tamanho do grid", 10, 50, 20)
-    steps_per_update = st.sidebar.slider("Passos por atualização", 1, 50, 10)
-    num_influencers = st.sidebar.slider("Número de influenciadores", 1, 10, 2)
-    num_wise = st.sidebar.slider("Número de sábios", 1, 10, 3)
-    temperature = st.sidebar.slider("Temperatura", 0.1, 5.0, 2.0)
-    fake_news_name = st.sidebar.text_input("Nome da Fake News", "Fake News")
+    def calculate_credibility(self):
+        return np.mean(self.state)
 
-    # Instanciando o modelo
-    model = FakeNewsIsingModel(
-        grid_size=grid_size, 
-        steps_per_update=steps_per_update,
-        num_influencers=num_influencers, 
-        num_wise=num_wise,
-        temperature=temperature,
-        fake_news_name=fake_news_name
-    )
+# Função para animar o gráfico
+def animate(i, model, ax):
+    model.update_state()
+    ax.clear()
+    ax.imshow(model.state, cmap='RdYlGn', vmin=-1, vmax=1)
+    for (x, y) in model.influencers:
+        ax.text(y, x, "★", color="black", ha="center", va="center", fontsize=12)
+    for (x, y) in model.wise_people:
+        ax.text(y, x, "💡", color="yellow", ha="center", va="center", fontsize=12)
+    ax.set_title(f"Iteração {i}")
+    ax.axis("off")
 
-    # Criação da figura e eixo
-    fig, ax = plt.subplots(figsize=(5, 5))
+# Configuração da interface com Streamlit
+st.set_page_config(page_title="Simulação de Fake News", layout="wide")
 
-    # Função de animação
-    def animate(frame):
-        model.update_state()
-        ax.clear()  # Limpa o gráfico anterior
-        model.plot_grid(ax)
+# Aba principal
+tab1, tab2 = st.tabs(["Simulação", "Sobre"])
 
-    # Configurar a animação
-    anim = FuncAnimation(fig, animate, frames=100, interval=200, repeat=False)
+with tab1:
+    st.header("Simulação de Fake News com o Modelo de Ising")
 
-    # Exibir a animação no Streamlit
+    # Entrada de parâmetros
+    grid_size = st.slider("Tamanho da grade (NxN):", 10, 50, 20)
+    temperature = st.slider("Temperatura:", 0.1, 5.0, 2.0)
+    num_influencers = st.slider("Quantidade de influenciadores:", 1, 10, 2)
+    num_wise = st.slider("Quantidade de sábios:", 1, 10, 3)
+    fake_news_name = st.text_input("Nome da Fake News:", "Fake News")
+
+    # Inicializar o modelo
+    model = FakeNewsIsingModel(grid_size, 10, num_influencers, num_wise, temperature, fake_news_name)
+
+    # Exibir a animação
+    st.write("### Simulação em andamento:")
+    fig, ax = plt.subplots()
+    anim = FuncAnimation(fig, animate, fargs=(model, ax), frames=200, interval=200)
     st.pyplot(fig)
 
-# Exibir a simulação
-if __name__ == "__main__":
-    run_simulation()
+with tab2:
+    st.header("Sobre o Modelo")
+    st.markdown("""
+    Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo. 
+    Foi desenvolvido por alunos do quarto semestre da Ilum Escola de Ciência.
+    
+    ### Modificações do modelo:
+    - **Spins (-1, 0, 1)** representam:
+      - `-1`: Pessoas que acreditam na fake news.
+      - `0`: Pessoas neutras.
+      - `1`: Pessoas que não acreditam.
+    - **Influenciadores (★)** têm maior peso na influência de vizinhos.
+    - **Sábios (💡)** nunca acreditam na fake news.
+    
+    ### Parâmetros ajustáveis:
+    - **Temperatura**: Controla a probabilidade de mudanças de estado.
+    - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
+
+    Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
+    Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
+    """)
