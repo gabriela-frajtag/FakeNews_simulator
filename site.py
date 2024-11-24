@@ -102,20 +102,34 @@ def run_simulation():
         fake_news_name=fake_news_name
     )
 
-    # Criar o espaço para exibir o gráfico animado
-    placeholder = st.empty()
+    # Botão para iniciar a animação
+    start_button = st.button("Iniciar Simulação")
 
-    # Criar o gráfico
-    fig, ax = plt.subplots(figsize=(5, 5))
-    ax.set_axis_off()  # Oculta os eixos
+    if start_button:
+        # Barra de progresso
+        progress_bar = st.progress(0)
+        # Criar o espaço para exibir o gráfico animado
+        placeholder = st.empty()
 
-    # Animação
-    anim = FuncAnimation(fig, animate, fargs=(model, ax), frames=iterations, interval=100)
-    st.pyplot(fig)
+        # Criar o gráfico
+        fig, ax = plt.subplots(figsize=(5, 5))
+        ax.set_axis_off()  # Oculta os eixos
 
-    # Exibir a credibilidade ao longo do tempo
-    st.write("### Credibilidade ao Longo do Tempo")
-    st.line_chart(model.credibility_history)
+        # Animação
+        for iteration in range(iterations):
+            model.update_state()
+            model.calculate_credibility()
+            ax.clear()  # Limpa o gráfico
+            model.plot_grid(iteration, ax)  # Plota a nova grade
+            st.pyplot(fig)  # Exibe o gráfico
+            st.line_chart(model.credibility_history)  # Exibe a credibilidade ao longo do tempo
+
+            # Atualiza a barra de progresso
+            progress_bar.progress((iteration + 1) / iterations)
+
+            time.sleep(0.1)  # Intervalo de atualização para dar tempo ao gráfico
+
+        st.success("Simulação concluída!")
 
 if __name__ == "__main__":
     # Configuração da interface com Streamlit
