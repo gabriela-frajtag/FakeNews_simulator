@@ -112,8 +112,17 @@ def run_simulation():
         cred_ax.set_xlabel("Iterações")
         cred_ax.set_ylabel("Credibilidade")
 
+        # Exibir a primeira iteração
+        model.update_state()
+        model.calculate_credibility()
+        ax.clear()  # Limpa o gráfico de Ising
+        model.plot_grid(0, ax)  # Plota a primeira iteração
+        st.pyplot(fig)  # Exibe o gráfico de Ising
+        cred_ax.plot(range(1), model.credibility_history, color="blue")
+        st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
+
         # Animação
-        for iteration in range(iterations):
+        for iteration in range(1, iterations):
             model.update_state()
             model.calculate_credibility()
             ax.clear()  # Limpa o gráfico de Ising
@@ -153,12 +162,10 @@ if __name__ == "__main__":
           - `0`: Pessoas neutras.
           - `1`: Pessoas que não acreditam.
         - **Influenciadores (★)** têm maior peso na influência de vizinhos.
-        - **Sábios (💡)** nunca acreditam na fake news.
+        - **Sábios (💡)** nunca acreditam na fake news - são os experts.
 
         ### Parâmetros ajustáveis:
         - **Temperatura**: Controla a probabilidade de mudanças de estado.
         - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
 
-        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
-        Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
-        """)
+        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim
