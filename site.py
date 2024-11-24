@@ -168,4 +168,6 @@ if __name__ == "__main__":
         - **Temperatura**: Controla a probabilidade de mudanças de estado.
         - **Influenciadores e sábios**: Afetam a dinâmica local do modelo.
 
-        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim
+        Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como espacialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
+        Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
+        """)
