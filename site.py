@@ -161,15 +161,15 @@ with tab2:
 
     ### Fórmula de Atualização:
     A fórmula de atualização usada no modelo de Ising modificado segue a ideia básica da termodinâmica e da física estatística, onde cada indivíduo (ou spin) tenta minimizar sua energia local. A atualização de um estado envolve a interação com seus vizinhos e a probabilidade de mudança é dada por:
-
-    $$ \[
+    $$
     P(\Delta E) = \frac{1}{1 + e^{\frac{\Delta E}{T}}}
-    \] $$
+    $$
 
     Onde:
     - \( \Delta E \) é a variação de energia ao mudar o estado de um indivíduo.
     - \( T \) é a temperatura do sistema (quanto maior a temperatura, mais fácil é a mudança de estado).
     - O valor de \( \Delta E \) é calculado como a diferença entre a energia do estado atual e do novo estado proposto, levando em consideração a influência dos vizinhos e dos influenciadores.
+
 
     ### Funcionamento do Algoritmo:
     - **Inicialização**: No começo, cada pessoa é atribuída a uma crença aleatória: ela pode acreditar na fake news (`1`), ser neutra (`0`) ou não acreditar nela (`-1`). 
