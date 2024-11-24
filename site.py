@@ -63,15 +63,15 @@ class FakeNewsIsingModel:
         credibility = np.mean(self.state)
         self.credibility_history.append(credibility)
 
-def plot_grid(self, iteration, ax):
-    ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1)
-    for (i, j) in self.influencers:
-        ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=8)  # Tamanho menor para a estrela
-    for (i, j) in self.wise_people:
-        ax.text(j, i, "●", ha='center', va='center', color="black", fontsize=8)  # Símbolo de círculo preenchido
-    ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}", fontsize=10)  # Título menor
-    ax.grid(True, color="black", linewidth=0.5)
-    ax.axis('off')
+    def plot_grid(self, iteration, ax):
+        ax.imshow(self.state, cmap='RdYlGn', vmin=-1, vmax=1, interpolation='nearest')  # Reduz a suavização
+        for (i, j) in self.influencers:
+            ax.text(j, i, "★", ha='center', va='center', color="black", fontsize=8)
+        for (i, j) in self.wise_people:
+            ax.text(j, i, "♦", ha='center', va='center', color="black", fontsize=8)  # Símbolo de lampada para sábios
+        ax.set_title(f"Iteração: {iteration} - {self.fake_news_name}")
+        ax.grid(True, color="black", linewidth=0.5)
+        ax.axis('off')
 
 # Função principal para a interface do Streamlit
 def run_simulation():
@@ -98,8 +98,8 @@ def run_simulation():
             fake_news_name=fake_news_name
         )
 
-        # Criar o gráfico da grade inicial
-        fig, ax = plt.subplots(figsize=(2, 2))
+        # Criar o gráfico da grade inicial com resolução menor
+        fig, ax = plt.subplots(figsize=(6, 6), dpi=60)  # Aumente dpi para ajustar o tamanho
         ax.set_axis_off()  # Oculta os eixos
         model.plot_grid(0, ax)
         st.pyplot(fig)
@@ -121,8 +121,8 @@ def run_simulation():
         st.subheader(f"Credibilidade da Fake News ({fake_news_name}) ao Longo do Tempo")
         st.line_chart(model.credibility_history)  # Exibe o gráfico final de credibilidade
 
-        # Exibir a grade final (após simulação)
-        fig, ax = plt.subplots(figsize=(2, 2))
+        # Exibir a grade final (após simulação) com resolução menor
+        fig, ax = plt.subplots(figsize=(6, 6), dpi=60)  # Aumente dpi para ajustar o tamanho
         ax.set_axis_off()
         model.plot_grid(num_iterations, ax)
         st.pyplot(fig)
