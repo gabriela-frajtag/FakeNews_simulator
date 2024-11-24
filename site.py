@@ -162,9 +162,9 @@ with tab2:
     ### Fórmula de Atualização:
     A fórmula de atualização usada no modelo de Ising modificado segue a ideia básica da termodinâmica e da física estatística, onde cada indivíduo (ou spin) tenta minimizar sua energia local. A atualização de um estado envolve a interação com seus vizinhos e a probabilidade de mudança é dada por:
 
-    \[
+    $$ \[
     P(\Delta E) = \frac{1}{1 + e^{\frac{\Delta E}{T}}}
-    \]
+    \] $$
 
     Onde:
     - \( \Delta E \) é a variação de energia ao mudar o estado de um indivíduo.
