@@ -121,11 +121,11 @@ def run_simulation():
             model.calculate_credibility()
             ax.clear()  # Limpa o gráfico de Ising
             model.plot_grid(iteration, ax)  # Plota a nova grade
-            st.pyplot(fig)  # Exibe o gráfico de Ising
+            placeholder.pyplot(fig)  # Exibe o gráfico de Ising
 
             # Atualiza o gráfico de credibilidade
             cred_ax.plot(range(iteration + 1), model.credibility_history, color="blue")
-            st.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
+            placeholder.pyplot(cred_fig)  # Exibe o gráfico de credibilidade
 
             # Atualiza a barra de progresso
             progress_bar.progress((iteration + 1) / iterations)
