@@ -142,7 +142,7 @@ with tab1:
 with tab2:
     st.header("Sobre o Modelo")
     st.markdown("""
-    Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo, agora adaptado para modelar a propagação de **fake news** em uma sociedade. Este modelo nos ajuda a entender como crenças podem se espalhar e como diferentes fatores, como influenciadores e especialistas (sábios), podem afetar essa propagação.
+    Este simulador utiliza uma versão modificada do **Modelo de Ising**, tradicionalmente utilizado em física para simular ferromagnetismo, agora adaptado para modelar a propagação de **fake news** em uma sociedade. Este modelo nos ajuda a entender como crenças podem se espalhar e como diferentes fatores, como influenciadores e especialistas (sábios), podem afetar essa propagação. Foi desenvolvido por estudantes do quarto semestre da Ilum Escola de Ciências.
 
     ### Importância de modelar fake news:
     Modelar a propagação de fake news é crucial para entender os mecanismos que levam à sua disseminação. Fake news podem influenciar escolhas políticas, causar pânico social e afetar decisões econômicas. Ao entender os padrões de propagação, podemos buscar formas de mitigar seus efeitos e desenvolver estratégias para aumentar a conscientização da população.
@@ -152,7 +152,7 @@ with tab2:
       - `1` (verde): Pessoas que acreditam na fake news.
       - `0`: Pessoas neutras, que não têm opinião formada sobre a fake news.
       - `-1` (vermelho): Pessoas que não acreditam na fake news.
-    - **Influenciadores (★)** têm maior peso e raio de influência na atualização de vizinhos. Eles têm a capacidade de influenciar mais fortemente aqueles ao seu redor, tornando a propagação da fake news mais rápida e abrangente.
+    - **Influenciadores (★)** têm maior peso e raio de influência na atualização de vizinhos. 
     - **Sábios (♦)** nunca acreditam na fake news, representando aqueles que têm conhecimento especializado e estão imunes à influência de notícias falsas.
 
     ### Parâmetros ajustáveis:
@@ -170,16 +170,15 @@ with tab2:
     st.markdown("""
     Onde:
     - $\Delta E$ é a variação de energia ao mudar o estado de um indivíduo.
-    - \( T \) é a temperatura do sistema (quanto maior a temperatura, mais fácil é a mudança de estado).
-    - O valor de \( \Delta E \) é calculado como a diferença entre a energia do estado atual e do novo estado proposto, levando em consideração a influência dos vizinhos e dos influenciadores.
+    - $T$ é a temperatura do sistema (quanto maior a temperatura, mais fácil é a mudança de estado).
+    - O valor de $\Delta E$ é calculado como a diferença entre a energia do estado atual e do novo estado proposto, levando em consideração a influência dos vizinhos e dos influenciadores.
     """)
 
     st.markdown("""
     ### Funcionamento do Algoritmo:
     - **Inicialização**: No começo, cada pessoa é atribuída a uma crença aleatória: ela pode acreditar na fake news (`1`), ser neutra (`0`) ou não acreditar nela (`-1`). 
     - **Seleção aleatória**: Durante cada iteração, uma pessoa é escolhida aleatoriamente para tentar mudar de opinião. Se essa pessoa for um sábio (que nunca acredita na fake news), ela não terá sua crença alterada. Caso contrário, ela poderá ser influenciada pelos seus vizinhos e, no caso dos **influenciadores**, por sua maior capacidade de persuasão.
-    - **Influência dos influenciadores**: No modelo, **influenciadores (★)** são indivíduos com maior peso de influência em relação aos outros. Eles têm a capacidade de afetar mais fortemente as crenças dos seus vizinhos, tornando a propagação da fake news mais rápida e abrangente. Se um influenciador tiver um vizinho neutro ou que não acredita na fake news, esse vizinho tem maior chance de mudar de crença, especialmente se a temperatura estiver mais alta, o que significa maior probabilidade de mudança de estado.
-    - **Probabilidade de mudança de crença**: Para uma pessoa que não seja sábia, a mudança de crença depende de sua interação com os vizinhos, o que é calculado pela variação de energia \( \Delta E \) de sua configuração. Caso essa mudança de energia seja negativa (ou com uma probabilidade calculada via a fórmula \( P(\Delta E) \)), ela pode mudar de crença.
+    - **Probabilidade de mudança de crença**: Para uma pessoa que não seja sábia, a mudança de crença depende de sua interação com os vizinhos, o que é calculado pela variação de energia ($\Delta E$) de sua configuração. Caso essa mudança de energia seja negativa (ou com uma probabilidade calculada via a fórmula ($P(\Delta E$), ela pode mudar de crença.
 
     Ajustar os parâmetros é essencial para modelar a propagação de fake news de maneira mais personalizada. Por exemplo, os sábios podem ser vistos como especialistas. Sendo assim, assuntos médicos como vacinas terão mais sábios que assuntos obscuros, como "pinguins extraterrestres que invadiram o planeta há duas eras geológicas atrás".  
     Sinta-se à vontade para ajustar os parâmetros e observar os efeitos na propagação de crenças!
