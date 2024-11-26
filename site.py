@@ -156,7 +156,7 @@ with tab2:
     - **Sábios (♦)** nunca acreditam na fake news, representando aqueles que têm conhecimento especializado e estão imunes à influência de notícias falsas.
 
     ### Parâmetros ajustáveis:
-    - **Temperatura**: Controla a probabilidade de mudanças de estado em uma pessoa. Quanto maior a temperatura, maior a chance de uma pessoa mudar de crença, mesmo contra sua vontade. Isso simula uma sociedade mais volúvel ou suscetível a influências externas.
+    - **Temperatura**: Controla a probabilidade de mudanças de estado em uma pessoa. Quanto maior a temperatura, maior a chance de uma pessoa mudar de crença. Isso é uma característica "inata" que varia de notícia para notícia. Quanto maior a temperatura, mais fácil as pessoas mudam de opinião sobre ela. Uma discussão de baixa temperatura (raramente algo vai mudar) é, por exemplo, a escolha de times de futebol.
     - **Influenciadores e sábios**: Afetam diretamente a dinâmica local do modelo. A presença de influenciadores pode acelerar a propagação da fake news, enquanto os sábios ajudam a frear essa disseminação.
 
     ### Fórmula de Atualização:
